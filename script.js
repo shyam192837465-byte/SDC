@@ -1,5 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  // --- 0. THEME INITIALIZATION (DEFAULT: LIGHT THEME) ---
+  const themeBtn = document.getElementById('themeToggleBtn');
+  const savedTheme = localStorage.getItem('theme');
+  
+  if (savedTheme === 'dark') {
+    document.body.classList.remove('light-theme');
+  } else {
+    document.body.classList.add('light-theme');
+  }
+
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-theme');
+      const isLight = document.body.classList.contains('light-theme');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    });
+  }
+
   // --- 1. HEADER SCROLL & BACK-TO-TOP CLASS ---
   const header = document.getElementById('header');
   window.addEventListener('scroll', () => {
@@ -141,23 +159,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const successModal = document.getElementById('successModal');
   const closeModalBtn = document.getElementById('closeModalBtn');
   
-  // --- CUSTOM INTERACTIVE CALENDAR FOR DATE SELECTION ---
+  // --- CUSTOM INTERACTIVE CALENDAR MODAL OVERLAY FOR DATE & TIME SELECTION ---
   function initCustomCalendar() {
     const calendarTrigger = document.getElementById('calendarTrigger');
     const calendarTriggerText = document.getElementById('calendarTriggerText');
-    const customCalendarCard = document.getElementById('customCalendarCard');
+    const customCalendarModal = document.getElementById('customCalendarModal');
+    const calModalCloseBtn = document.getElementById('calModalCloseBtn');
+    const calApplyBtn = document.getElementById('calApplyBtn');
     const calPrevMonth = document.getElementById('calPrevMonth');
     const calNextMonth = document.getElementById('calNextMonth');
     const calMonthYear = document.getElementById('calMonthYear');
     const calDaysGrid = document.getElementById('calDaysGrid');
     const calSlotsWrapper = document.getElementById('calSlotsWrapper');
     const selectedDateBadge = document.getElementById('selectedDateBadge');
-    const slotsGrid = document.getElementById('slotsGrid');
     const sundayNotice = document.getElementById('sundayNotice');
     const calTodayBtn = document.getElementById('calTodayBtn');
     const hiddenDateInput = document.getElementById('date');
+    const timeSlotSelect = document.getElementById('timeSlot');
 
-    if (!calendarTrigger || !customCalendarCard || !calDaysGrid) return;
+    if (!calendarTrigger || !customCalendarModal || !calDaysGrid) return;
 
     let today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -262,12 +282,20 @@ document.addEventListener('DOMContentLoaded', () => {
           // Re-render grid to update active selection state
           renderCalendar();
 
-          // Show time slots
+          // Show time slots section
           const formatted = formatDateFormatted(cellDate);
           if (selectedDateBadge) selectedDateBadge.innerText = formatted;
-          if (calSlotsWrapper) calSlotsWrapper.style.display = 'flex';
+          if (calSlotsWrapper) calSlotsWrapper.style.display = 'block';
 
           updateTriggerLabel(formatted);
+
+          // Scroll slots into view smoothly within modal body
+          const modalBody = customCalendarModal.querySelector('.cal-modal-body');
+          if (modalBody && calSlotsWrapper) {
+            setTimeout(() => {
+              calSlotsWrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+          }
         });
 
         calDaysGrid.appendChild(cell);
@@ -286,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateTriggerLabel(formattedDate) {
-      const slotText = window.__selectedTimeSlot ? ` (${window.__selectedTimeSlot})` : '';
+      const slotText = window.__selectedTimeSlot ? ` • ${window.__selectedTimeSlot}` : '';
       calendarTriggerText.className = 'calendar-trigger-text';
       calendarTriggerText.innerHTML = `📅 ${formattedDate}${slotText}`;
     }
@@ -338,63 +366,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const formatted = formatDateFormatted(targetDate);
         if (selectedDateBadge) selectedDateBadge.innerText = formatted;
-        if (calSlotsWrapper) calSlotsWrapper.style.display = 'flex';
+        if (calSlotsWrapper) calSlotsWrapper.style.display = 'block';
 
         updateTriggerLabel(formatted);
       });
     }
 
     // Time Slot Selection (Two-Way Sync with Form Dropdown)
-    const timeSlotSelect = document.getElementById('timeSlot');
-
-    if (slotsGrid) {
-      const slotChips = slotsGrid.querySelectorAll('.slot-chip');
-      slotChips.forEach(chip => {
-        chip.addEventListener('click', (e) => {
-          e.stopPropagation();
-          slotChips.forEach(c => c.classList.remove('selected'));
-          chip.classList.add('selected');
-          const timeVal = chip.getAttribute('data-time');
-          window.__selectedTimeSlot = timeVal;
-          if (timeSlotSelect) {
-            timeSlotSelect.value = timeVal;
-          }
-          if (selectedDate) {
-            updateTriggerLabel(formatDateFormatted(selectedDate));
-          }
-        });
+    const slotChips = customCalendarModal.querySelectorAll('.slot-chip');
+    slotChips.forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.stopPropagation();
+        slotChips.forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        const timeVal = chip.getAttribute('data-time');
+        window.__selectedTimeSlot = timeVal;
+        if (timeSlotSelect) {
+          timeSlotSelect.value = timeVal;
+        }
+        if (selectedDate) {
+          updateTriggerLabel(formatDateFormatted(selectedDate));
+        }
       });
-    }
+    });
 
     if (timeSlotSelect) {
       timeSlotSelect.addEventListener('change', () => {
         const timeVal = timeSlotSelect.value;
         window.__selectedTimeSlot = timeVal;
-        if (slotsGrid) {
-          const slotChips = slotsGrid.querySelectorAll('.slot-chip');
-          slotChips.forEach(c => {
-            if (c.getAttribute('data-time') === timeVal) {
-              c.classList.add('selected');
-            } else {
-              c.classList.remove('selected');
-            }
-          });
-        }
+        slotChips.forEach(c => {
+          if (c.getAttribute('data-time') === timeVal) {
+            c.classList.add('selected');
+          } else {
+            c.classList.remove('selected');
+          }
+        });
         if (selectedDate) {
           updateTriggerLabel(formatDateFormatted(selectedDate));
         }
       });
     }
 
-    // Toggle Calendar Dropdown Card
+    // Toggle Modal Overlay
     function toggleCalendar(show) {
-      const isOpen = show !== undefined ? show : !customCalendarCard.classList.contains('open');
+      const isOpen = show !== undefined ? show : !customCalendarModal.classList.contains('active');
       if (isOpen) {
-        customCalendarCard.classList.add('open');
+        customCalendarModal.classList.add('active');
+        document.body.classList.add('cal-modal-open');
         calendarTrigger.classList.add('active');
         calendarTrigger.setAttribute('aria-expanded', 'true');
       } else {
-        customCalendarCard.classList.remove('open');
+        customCalendarModal.classList.remove('active');
+        document.body.classList.remove('cal-modal-open');
         calendarTrigger.classList.remove('active');
         calendarTrigger.setAttribute('aria-expanded', 'false');
       }
@@ -402,19 +425,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     calendarTrigger.addEventListener('click', (e) => {
       e.stopPropagation();
-      toggleCalendar();
+      toggleCalendar(true);
     });
 
     calendarTrigger.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        toggleCalendar();
+        toggleCalendar(true);
       }
     });
 
-    // Close when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!calendarTrigger.contains(e.target) && !customCalendarCard.contains(e.target)) {
+    if (calModalCloseBtn) {
+      calModalCloseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleCalendar(false);
+      });
+    }
+
+    if (calApplyBtn) {
+      calApplyBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (selectedDate) {
+          updateTriggerLabel(formatDateFormatted(selectedDate));
+        }
+        toggleCalendar(false);
+      });
+    }
+
+    // Close when clicking modal backdrop overlay
+    customCalendarModal.addEventListener('click', (e) => {
+      if (e.target === customCalendarModal) {
+        toggleCalendar(false);
+      }
+    });
+
+    // Close on Escape key press
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && customCalendarModal.classList.contains('active')) {
         toggleCalendar(false);
       }
     });
@@ -433,9 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
         calendarTriggerText.className = 'calendar-trigger-placeholder';
         calendarTriggerText.innerText = 'Select Appointment Date';
         if (calSlotsWrapper) calSlotsWrapper.style.display = 'none';
-        if (slotsGrid) {
-          slotsGrid.querySelectorAll('.slot-chip').forEach(c => c.classList.remove('selected'));
-        }
+        slotChips.forEach(c => c.classList.remove('selected'));
         toggleCalendar(false);
         renderCalendar();
       });
@@ -824,23 +869,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
     }
-// Theme toggle logic
-const themeBtn = document.getElementById('themeToggleBtn');
-if (themeBtn) {
-  // Determine initial theme
-  const savedTheme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const isLight = savedTheme ? savedTheme === 'light' : !prefersDark;
-  if (isLight) {
-    document.body.classList.add('light-theme');
-  }
-  // Click handler to toggle theme
-  themeBtn.addEventListener('click', () => {
-    document.body.classList.toggle('light-theme');
-    const nowLight = document.body.classList.contains('light-theme');
-    localStorage.setItem('theme', nowLight ? 'light' : 'dark');
-  });
-}
 
   } else {
     // Fallback counter if GSAP is not available

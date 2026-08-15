@@ -6,8 +6,18 @@
   <title>Saranya Dental Clinic | SDC Somanur - Smile with Confidence</title>
   <meta name="description" content="Welcome to Saranya Dental Clinic (SDC) in Somanur. Experience premium dental care with Dr. Saranya. Book an appointment today for Root Canal, Implants, Braces, and more.">
   <link rel="stylesheet" href="style.css">
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.remove('light-theme');
+      } else {
+        document.documentElement.classList.add('light-theme');
+      }
+    })();
+  </script>
 </head>
-<body>
+<body class="light-theme">
 
   <!-- BACKGROUND DECORATIONS -->
   <div class="bg-blobs">
@@ -104,7 +114,7 @@
 
       <div class="hero-image-wrapper">
         <div class="hero-img-container">
-          <img src="assets/hero.png" alt="SDC Modern Dental Care" class="hero-img" onerror="this.src='https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&q=80&w=600'">
+          <img src="assets/hero.png" alt="Saranya Dental Clinic Operatory & Modern Equipment" class="hero-img" onerror="this.src='https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&q=80&w=600'">
         </div>
         
         <!-- Floating Stat Cards -->
@@ -536,77 +546,6 @@
               
               <!-- Hidden Date Input for Form Validation & Firebase -->
               <input type="hidden" id="date" name="date" required>
-
-              <!-- Interactive Custom Calendar Popover Widget -->
-              <div class="custom-calendar-card glass-card" id="customCalendarCard">
-                <!-- Header: Month/Year navigation -->
-                <div class="calendar-header">
-                  <button type="button" class="calendar-nav-btn" id="calPrevMonth" aria-label="Previous Month">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-                  </button>
-                  <div class="calendar-month-year" id="calMonthYear">August 2026</div>
-                  <button type="button" class="calendar-nav-btn" id="calNextMonth" aria-label="Next Month">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-                  </button>
-                </div>
-
-                <!-- Weekdays Row -->
-                <div class="calendar-weekdays">
-                  <span class="closed-day" title="Clinic closed on Sundays">Sun</span>
-                  <span>Mon</span>
-                  <span>Tue</span>
-                  <span>Wed</span>
-                  <span>Thu</span>
-                  <span>Fri</span>
-                  <span>Sat</span>
-                </div>
-
-                <!-- Interactive Days Grid -->
-                <div class="calendar-days-grid" id="calDaysGrid"></div>
-
-                <!-- Time Slot Selection Section -->
-                <div class="calendar-slots-wrapper" id="calSlotsWrapper" style="display: none;">
-                  <div class="slots-header">
-                    <span>Preferred Time Slot</span>
-                    <span class="slots-date-badge" id="selectedDateBadge"></span>
-                  </div>
-                  <div class="slots-grid" id="slotsGrid">
-                    <!-- Morning Session Slots (09:30 AM - 01:30 PM) -->
-                    <button type="button" class="slot-chip" data-time="09:30 AM">☀️ 09:30 AM</button>
-                    <button type="button" class="slot-chip" data-time="10:00 AM">☀️ 10:00 AM</button>
-                    <button type="button" class="slot-chip" data-time="10:30 AM">☀️ 10:30 AM</button>
-                    <button type="button" class="slot-chip" data-time="11:00 AM">☀️ 11:00 AM</button>
-                    <button type="button" class="slot-chip" data-time="11:30 AM">☀️ 11:30 AM</button>
-                    <button type="button" class="slot-chip" data-time="12:00 PM">☀️ 12:00 PM</button>
-                    <button type="button" class="slot-chip" data-time="12:30 PM">☀️ 12:30 PM</button>
-                    <button type="button" class="slot-chip" data-time="01:00 PM">☀️ 01:00 PM</button>
-                    
-                    <!-- Evening Session Slots (04:30 PM - 08:30 PM) -->
-                    <button type="button" class="slot-chip" data-time="04:30 PM">🌙 04:30 PM</button>
-                    <button type="button" class="slot-chip" data-time="05:00 PM">🌙 05:00 PM</button>
-                    <button type="button" class="slot-chip" data-time="05:30 PM">🌙 05:30 PM</button>
-                    <button type="button" class="slot-chip" data-time="06:00 PM">🌙 06:00 PM</button>
-                    <button type="button" class="slot-chip" data-time="06:30 PM">🌙 06:30 PM</button>
-                    <button type="button" class="slot-chip" data-time="07:00 PM">🌙 07:00 PM</button>
-                    <button type="button" class="slot-chip" data-time="07:30 PM">🌙 07:30 PM</button>
-                    <button type="button" class="slot-chip" data-time="08:00 PM">🌙 08:00 PM</button>
-                  </div>
-                </div>
-
-                <!-- Sunday Closure Notice Toast -->
-                <div class="sunday-notice-popup" id="sundayNotice" style="display: none;">
-                  🏥 Clinic is closed on Sundays. Please choose Monday &ndash; Saturday.
-                </div>
-
-                <!-- Calendar Footer / Legend -->
-                <div class="calendar-footer">
-                  <div class="cal-legend">
-                    <span class="legend-item"><span class="legend-dot available"></span> Available</span>
-                    <span class="legend-item"><span class="legend-dot closed"></span> Sun Closed</span>
-                  </div>
-                  <button type="button" class="btn-today-quick" id="calTodayBtn">Select Today</button>
-                </div>
-              </div>
             </div>
 
             <div class="form-group">
@@ -901,6 +840,115 @@
     </div>
   </footer>
 
+  <!-- MODAL FOR APPOINTMENT DATE & TIME SLOT SELECTION -->
+  <div class="cal-modal-overlay" id="customCalendarModal" role="dialog" aria-modal="true" aria-labelledby="calModalTitle">
+  <div class="cal-modal-container">
+      <!-- Drag Handle for Mobile Sheet -->
+      <div class="cal-modal-drag-handle"></div>
+      
+      <!-- Modal Header -->
+      <div class="cal-modal-header">
+        <div class="cal-modal-title-group">
+          <div class="cal-modal-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <div>
+            <h3 id="calModalTitle" class="cal-modal-title">Select Appointment Slot</h3>
+            <p class="cal-modal-subtitle">Choose your preferred date & time for consultation</p>
+          </div>
+        </div>
+        <button type="button" class="cal-modal-close" id="calModalCloseBtn" aria-label="Close Calendar Modal">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="cal-modal-body">
+        <!-- Header: Month/Year navigation -->
+        <div class="calendar-header">
+          <button type="button" class="calendar-nav-btn" id="calPrevMonth" aria-label="Previous Month">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="calendar-month-year" id="calMonthYear">August 2026</div>
+          <button type="button" class="calendar-nav-btn" id="calNextMonth" aria-label="Next Month">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+
+        <!-- Weekdays Row -->
+        <div class="calendar-weekdays">
+          <span class="closed-day" title="Clinic closed on Sundays">Sun</span>
+          <span>Mon</span>
+          <span>Tue</span>
+          <span>Wed</span>
+          <span>Thu</span>
+          <span>Fri</span>
+          <span>Sat</span>
+        </div>
+
+        <!-- Interactive Days Grid -->
+        <div class="calendar-days-grid" id="calDaysGrid"></div>
+
+        <!-- Time Slot Selection Section -->
+        <div class="calendar-slots-wrapper" id="calSlotsWrapper" style="display: none;">
+          <div class="slots-header">
+            <span>Preferred Time Slot</span>
+            <span class="slots-date-badge" id="selectedDateBadge"></span>
+          </div>
+          
+          <div class="slots-section-label">☀️ Morning Session (09:30 AM &ndash; 01:30 PM)</div>
+          <div class="slots-grid" id="morningSlotsGrid">
+            <button type="button" class="slot-chip" data-time="09:30 AM">09:30 AM</button>
+            <button type="button" class="slot-chip" data-time="10:00 AM">10:00 AM</button>
+            <button type="button" class="slot-chip" data-time="10:30 AM">10:30 AM</button>
+            <button type="button" class="slot-chip" data-time="11:00 AM">11:00 AM</button>
+            <button type="button" class="slot-chip" data-time="11:30 AM">11:30 AM</button>
+            <button type="button" class="slot-chip" data-time="12:00 PM">12:00 PM</button>
+            <button type="button" class="slot-chip" data-time="12:30 PM">12:30 PM</button>
+            <button type="button" class="slot-chip" data-time="01:00 PM">01:00 PM</button>
+          </div>
+
+          <div class="slots-section-label" style="margin-top: 0.75rem;">🌙 Evening Session (04:30 PM &ndash; 08:30 PM)</div>
+          <div class="slots-grid" id="eveningSlotsGrid">
+            <button type="button" class="slot-chip" data-time="04:30 PM">04:30 PM</button>
+            <button type="button" class="slot-chip" data-time="05:00 PM">05:00 PM</button>
+            <button type="button" class="slot-chip" data-time="05:30 PM">05:30 PM</button>
+            <button type="button" class="slot-chip" data-time="06:00 PM">06:00 PM</button>
+            <button type="button" class="slot-chip" data-time="06:30 PM">06:30 PM</button>
+            <button type="button" class="slot-chip" data-time="07:00 PM">07:00 PM</button>
+            <button type="button" class="slot-chip" data-time="07:30 PM">07:30 PM</button>
+            <button type="button" class="slot-chip" data-time="08:00 PM">08:00 PM</button>
+          </div>
+        </div>
+
+        <!-- Sunday Closure Notice Toast -->
+        <div class="sunday-notice-popup" id="sundayNotice" style="display: none;">
+          🏥 Clinic is closed on Sundays. Please choose Monday &ndash; Saturday.
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="cal-modal-footer">
+        <div class="cal-legend">
+          <span class="legend-item"><span class="legend-dot available"></span> Available</span>
+          <span class="legend-item"><span class="legend-dot closed"></span> Sun Closed</span>
+        </div>
+        <div class="cal-footer-btns">
+          <button type="button" class="btn-today-quick" id="calTodayBtn">Select Today</button>
+          <button type="button" class="btn btn-primary cal-modal-apply-btn" id="calApplyBtn">Apply & Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL FOR SUCCESS BOOKING -->
   <div class="modal-overlay" id="successModal">
     <div class="modal-content glass-card">
@@ -969,6 +1017,8 @@
     window.dispatchEvent(new Event('firebaseReady'));
   </script>
 
+  <!-- ClickSpark — fires spark burst animation on every click (vanilla JS port of React Bits ClickSpark) -->
+  <script src="click-spark.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
