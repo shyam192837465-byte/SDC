@@ -26,12 +26,19 @@ if (serviceAccount && !admin.apps.length) {
   });
 }
 
+const path = require('path');
+const fs = require('fs');
+
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files if hosted directly via Express
-app.use(express.static(__dirname));
+// Serve static files (prioritizing Vite dist/ build if available)
+if (fs.existsSync(path.join(__dirname, 'dist'))) {
+  app.use(express.static(path.join(__dirname, 'dist')));
+} else {
+  app.use(express.static(__dirname));
+}
 
 app.post('/send-notification', async (req, res) => {
   const { patientName, treatment, date, time, session } = req.body;
