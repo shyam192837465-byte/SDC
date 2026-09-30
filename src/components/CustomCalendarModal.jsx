@@ -1,21 +1,7 @@
 import React, { useState, useEffect } from 'react';
-
-const monthNames = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-];
-
-const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-const morningSlots = [
-  '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM',
-  '11:30 AM', '12:00 PM', '12:30 PM', '01:00 PM'
-];
-
-const eveningSlots = [
-  '04:30 PM', '05:00 PM', '05:30 PM', '06:00 PM',
-  '06:30 PM', '07:00 PM', '07:30 PM', '08:00 PM'
-];
+import {
+  monthNames, dayNames, morningSlots, eveningSlots, formatDateFormatted
+} from '../utils';
 
 export default function CustomCalendarModal({
   isOpen,
@@ -50,15 +36,6 @@ export default function CustomCalendarModal({
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
-
-  const formatDateFormatted = (d) => {
-    if (!d) return '';
-    const dayName = dayNames[d.getDay()];
-    const dayNum = d.getDate();
-    const monthName = monthNames[d.getMonth()].slice(0, 3);
-    const year = d.getFullYear();
-    return `${dayName}, ${dayNum} ${monthName} ${year}`;
-  };
 
   const handlePrevMonth = (e) => {
     e.stopPropagation();

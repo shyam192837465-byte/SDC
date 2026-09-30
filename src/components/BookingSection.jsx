@@ -2,12 +2,7 @@ import React, { useState } from 'react';
 import CustomCalendarModal from './CustomCalendarModal';
 import BookingSuccessModal from './BookingSuccessModal';
 import { db, collection, addDoc, serverTimestamp } from '../firebase';
-
-const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const monthNames = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-];
+import { formatDateFormatted, formatDateDDMMYYYY, getSessionName } from '../utils';
 
 export default function BookingSection() {
   const [formData, setFormData] = useState({
@@ -26,31 +21,6 @@ export default function BookingSection() {
   const [confirmedData, setConfirmedData] = useState(null);
   const [formMsg, setFormMsg] = useState({ text: '', type: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const formatDateFormatted = (d) => {
-    if (!d) return '';
-    const dayName = dayNames[d.getDay()];
-    const dayNum = d.getDate();
-    const monthName = monthNames[d.getMonth()].slice(0, 3);
-    const year = d.getFullYear();
-    return `${dayName}, ${dayNum} ${monthName} ${year}`;
-  };
-
-  const formatDateISO = (d) => {
-    if (!d) return '';
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
-  };
-
-  const formatDateDDMMYYYY = (d) => {
-    if (!d) return '';
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    return `${dd}/${mm}/${yyyy}`;
-  };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -91,14 +61,8 @@ export default function BookingSection() {
     setFormMsg({ text: '', type: '' });
 
     const formattedDateStr = formatDateDDMMYYYY(selectedDate);
-    const isMorning =
-      selectedTime.includes('AM') ||
-      selectedTime.startsWith('09') ||
-      selectedTime.startsWith('10') ||
-      selectedTime.startsWith('11');
-    const sessionName = isMorning
-      ? 'Morning Session (09:30 AM - 01:30 PM)'
-      : 'Evening Session (04:30 PM - 08:30 PM)';
+    const sessionName = getSessionName(selectedTime);
+    const isMorning = sessionName.startsWith('Morning');
 
     try {
       // Save appointment to Firestore

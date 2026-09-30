@@ -2,5 +2,20 @@ node_modules/
 .DS_Store
 *.log
 
-# Sensitive Firebase credentials
+# Build output
+dist/
+
+# Environment & Secrets
+.env
+.env.local
+.env.production
 serviceAccountKey.json
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+Thumbs.db

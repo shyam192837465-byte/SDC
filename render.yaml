@@ -1,0 +1,32 @@
+# ============================================
+# Render Blueprint — Infrastructure as Code
+# Defines the SDC web service configuration
+# ============================================
+# Usage: Connect your GitHub repo to Render,
+# and it will auto-detect this file.
+# ============================================
+
+services:
+  - type: web
+    name: sdc-saranya-dental-clinic
+    runtime: node
+    region: singapore     # Closest to Coimbatore, India
+    plan: free
+
+    # Build: install deps + build Vite frontend
+    buildCommand: npm ci && npm run build
+
+    # Start: run the Express server (serves dist/ + API)
+    startCommand: node server.js
+
+    # Health check endpoint
+    healthCheckPath: /
+
+    # Environment variables (set actual values in Render dashboard)
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      - key: FIREBASE_SERVICE_ACCOUNT
+        sync: false        # Must be set manually in Render dashboard
