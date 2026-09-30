@@ -80,24 +80,4 @@ jobs:
           path: dist/
           retention-days: 7
 
-  # ──────────────────────────────────────────
-  # Job 3: Deploy to Render (main branch only)
-  # ──────────────────────────────────────────
-  deploy:
-    name: Deploy to Render
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
-    steps:
-      - name: Trigger Render Deploy
-        run: |
-          echo "🚀 Triggering Render deploy..."
-          response=$(curl -s -o /dev/null -w "%{http_code}" \
-            "${{ secrets.RENDER_DEPLOY_HOOK_URL }}")
-          if [ "$response" -eq 200 ] || [ "$response" -eq 201 ]; then
-            echo "✅ Render deploy triggered successfully (HTTP $response)"
-          else
-            echo "❌ Render deploy failed (HTTP $response)"
-            exit 1
-          fi
