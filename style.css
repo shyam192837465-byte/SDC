@@ -112,7 +112,6 @@ textarea {
   background: rgba(13, 148, 136, 0.2);
   border-radius: 10px;
   border: 2px solid var(--light);
-  transition: var(--transition-smooth);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -130,6 +129,7 @@ textarea {
   overflow: hidden;
   pointer-events: none;
   contain: strict;
+  will-change: transform;
   background: 
     radial-gradient(circle at 10% 15%, rgba(45, 212, 191, 0.12) 0%, transparent 45%),
     radial-gradient(circle at 90% 85%, rgba(14, 165, 233, 0.12) 0%, transparent 50%),
@@ -159,7 +159,7 @@ textarea {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1.25rem;
-  background: linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(14, 165, 233, 0.15));
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.22), rgba(14, 165, 233, 0.22));
   color: var(--primary-light);
   font-family: var(--font-heading);
   font-weight: 700;
@@ -170,7 +170,6 @@ textarea {
   margin-bottom: 1.25rem;
   border: 1px solid rgba(45, 212, 191, 0.3);
   box-shadow: 0 0 20px rgba(13, 148, 136, 0.2);
-  backdrop-filter: blur(10px);
 }
 
 .section-title {
@@ -244,10 +243,9 @@ textarea {
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--dark);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -588,6 +586,7 @@ textarea {
   align-items: center;
   gap: 1.1rem;
   animation: float-card 6s infinite ease-in-out;
+  will-change: transform;
   border: 1px solid rgba(45, 212, 191, 0.3);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(13, 148, 136, 0.2);
 }
@@ -904,6 +903,7 @@ textarea {
   text-align: center;
   box-shadow: 0 20px 40px rgba(13, 148, 136, 0.25);
   animation: float-card 5s infinite alternate ease-in-out;
+  will-change: transform;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -1830,7 +1830,6 @@ body.cal-modal-open {
 .map-bar {
   padding: 0.75rem 1rem;
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1984,6 +1983,7 @@ body.cal-modal-open {
   min-width: 100%;
   flex-shrink: 0;
   animation: scroll-marquee 25s linear infinite;
+  will-change: transform;
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 1.15rem;
@@ -2931,12 +2931,10 @@ body.light-theme .cal-modal-footer {
     display: none !important;
   }
   .glass-card {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: var(--glass-bg);
   }
   .header.scrolled {
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: rgba(6, 9, 19, 0.97);
   }
 }
 

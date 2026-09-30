@@ -1,4 +1,5 @@
 import React from 'react';
+import heroImg from '../assets/hero.png';
 
 export default function Hero() {
   return (
@@ -30,12 +31,9 @@ export default function Hero() {
         <div className="hero-image-wrapper">
           <div className="hero-img-container">
             <img
-              src="assets/hero.png"
+              src={heroImg}
               alt="Saranya Dental Clinic Operatory & Modern Equipment"
               className="hero-img"
-              onError={(e) => {
-                e.currentTarget.src = 'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&q=80&w=600';
-              }}
             />
           </div>
 

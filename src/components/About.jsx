@@ -1,4 +1,5 @@
 import React from 'react';
+import aboutImg from '../assets/about.png';
 
 export default function About() {
   return (
@@ -7,12 +8,9 @@ export default function About() {
         <div className="about-image-wrapper">
           <div className="about-img-container">
             <img
-              src="assets/about.png"
+              src={aboutImg}
               alt="Dr. Saranya Dentist SDC"
               className="about-img"
-              onError={(e) => {
-                e.currentTarget.src = 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=600';
-              }}
             />
           </div>
           <div className="about-experience-badge">

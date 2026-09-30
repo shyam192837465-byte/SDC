@@ -10,6 +10,7 @@ import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import BackgroundBlobs from './components/BackgroundBlobs';
 import MouseGlow from './components/MouseGlow';
+import ClickSpark from './components/ClickSpark';
 
 export default function App() {
   const [isLight, setIsLight] = useState(() => {
@@ -33,6 +34,7 @@ export default function App() {
 
   return (
     <>
+      <ClickSpark />
       <BackgroundBlobs />
       <MouseGlow />
       <Header isLight={isLight} onToggleTheme={handleToggleTheme} />

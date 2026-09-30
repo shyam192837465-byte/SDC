@@ -100,13 +100,22 @@ export default function ClickSpark() {
       }
     };
 
+    const handleSelectChange = (e) => {
+      if (e.target && e.target.tagName === 'SELECT') {
+        const rect = e.target.getBoundingClientRect();
+        addSparks(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      }
+    };
+
     document.addEventListener('click', handleClick);
     document.addEventListener('touchstart', handleTouch, { passive: true });
+    document.addEventListener('change', handleSelectChange, { passive: true });
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       document.removeEventListener('click', handleClick);
       document.removeEventListener('touchstart', handleTouch);
+      document.removeEventListener('change', handleSelectChange);
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
